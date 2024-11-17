@@ -1,0 +1,9 @@
+.timer {
+    padding: 10px;
+}
+
+.timer .actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
