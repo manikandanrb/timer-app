@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import './Timer.css'
 
-// stop watch timer
+// stop watch timer with hours
 const Timer = () => {
-    
-    const [{minutes, seconds}, setTime] = useState<any>({
+    const [{hours, minutes, seconds}, setTime] = useState({
+        hours: 0,
         minutes: 0,
         seconds: 0
     });
@@ -12,17 +12,27 @@ const Timer = () => {
     const intervalRef = useRef<any>({ id: null });
 
     const handleIncrement = () => {
-        setTime((prevState: any) => {
-            const updatedSeconds = prevState.seconds + 1;
-            if(updatedSeconds === 10){
-                return {
-                    minutes: prevState.minutes + 1,
-                    seconds: 0
-                }
+        setTime((prevState) => {
+            let newSeconds = prevState.seconds + 1;
+            let newMinutes = prevState.minutes;
+            let newHours = prevState.hours;
+
+            // Handle seconds rollover
+            if (newSeconds === 60) {
+                newSeconds = 0;
+                newMinutes += 1;
             }
+
+            // Handle minutes rollover
+            if (newMinutes === 60) {
+                newMinutes = 0;
+                newHours += 1;
+            }
+
             return {
-                ...prevState,
-                seconds: updatedSeconds
+                hours: newHours,
+                minutes: newMinutes,
+                seconds: newSeconds
             }
         })
     }
@@ -46,10 +56,14 @@ const Timer = () => {
         clearInterval(intervalRef.current.id);
         intervalRef.current.id = null;
         setTime({
+            hours: 0,
             minutes: 0,
             seconds: 0
         })
     }
+
+    // Helper function to pad single digits with leading zero
+    const padTime = (time: number) => time.toString().padStart(2, '0');
 
     return (
         <div className="timer">
@@ -60,7 +74,7 @@ const Timer = () => {
                 <button onClick={handleResetTimer}>Reset timer</button>
             </div>
             <div className='display-timer'>
-                {minutes} : {seconds}
+                {padTime(hours)} : {padTime(minutes)} : {padTime(seconds)}
             </div>
         </div>
     )
