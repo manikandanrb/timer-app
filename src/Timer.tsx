@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './Timer.css'
 
+// stop watch timer
 const Timer = () => {
     
     const [{minutes, seconds}, setTime] = useState<any>({
